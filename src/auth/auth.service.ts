@@ -17,10 +17,14 @@ export class AuthService {
             throw new HttpException('Exists', HttpStatus.BAD_REQUEST)
         }
 
-        const hashPassword = await bcrypt.hash(dto.password, 5)
+        const hashPassword = await this.encryptPassword(dto.password)
 
         const user = await this.userService.createUser({ ...dto, password: hashPassword }, image)
         return this.generateToken(user)
+    }
+
+    async encryptPassword(password) {
+        return await bcrypt.hash(password, 5)
     }
 
     async signIn(dto: SignInDto) {

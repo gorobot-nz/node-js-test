@@ -4,6 +4,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { SignUpDto } from "./dto/signup.dto";
 import { FileService } from "src/file/file.service";
 import { PutUserDto } from "./dto/putuser.dto";
+import * as bcrypt from 'bcryptjs'
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,8 @@ export class UserService {
     }
 
     async putUser(dto: PutUserDto, id: number) {
-        const user = await this.userRepository.update({ ...dto }, { where: { id } })
+        const hashedPassword = await bcrypt.hash(dto.password, 5)
+        const user = await this.userRepository.update({ ...dto, password: hashedPassword }, { where: { id } })
         return user
     }
 
