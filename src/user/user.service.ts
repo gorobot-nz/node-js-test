@@ -5,6 +5,7 @@ import { SignUpDto } from "./dto/signup.dto";
 import { FileService } from "src/file/file.service";
 import { PutUserDto } from "./dto/putuser.dto";
 import * as bcrypt from 'bcryptjs'
+import { AuthService } from "src/auth/auth.service";
 
 @Injectable()
 export class UserService {
