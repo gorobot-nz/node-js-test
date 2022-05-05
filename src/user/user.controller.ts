@@ -2,10 +2,16 @@ import { Body, Controller, Delete, Get, Post, Put, Param, UseGuards } from "@nes
 import { PutUserDto } from "./dto/putUser.dto";
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { CreatePdfDto } from "./dto/createPdf.dto";
 
 @Controller('/user')
 export class UserController {
     constructor(private userService: UserService) { }
+
+    @Post('/pdf')
+    createUserPdf(@Body() dto: CreatePdfDto) {
+        return this.userService.createPdf(dto.email)
+    }
 
     @Get('/:id')
     @UseGuards(JwtAuthGuard)

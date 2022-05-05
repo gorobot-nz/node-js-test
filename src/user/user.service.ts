@@ -12,7 +12,7 @@ export class UserService {
         private fileService: FileService) { }
 
     async createUser(dto: SignUpDto, image) {
-        const imageName = this.fileService.createFile(image)
+        const imageName = this.fileService.createImageFile(image)
         const user = await this.userRepository.create({ ...dto, image: imageName })
         return user
     }
@@ -34,6 +34,12 @@ export class UserService {
     async deleteUser(id: number) {
         const userId = await this.userRepository.destroy({ where: { id } })
         return { id: userId }
+    }
+
+    async createPdf(email: string) {
+        const user = await this.findByEmail(email)
+        this.fileService.createPdfFile(user.firstName, user.lastName, user.image)
+        return 'Bruh'
     }
 
     async findByEmail(email: string) {
