@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { User } from "./user.model";
 import { InjectModel } from "@nestjs/sequelize";
 import { SignUpDto } from "./dto/signup.dto";
@@ -18,16 +18,22 @@ export class UserService {
     }
 
     async getUser(id: number) {
-        const user = await this.userRepository.findOne({ where: { id } })
+        const user = await this.userRepository.findByPk(id)
+        if (!user) {
+            throw new HttpException('Something goes wrong', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
         return user
     }
 
     async putUser(dto: PutUserDto, id: number) {
-
+        console.log(id)
+        const user = await this.userRepository.update({ ...dto }, { where: { id }, returning: true })
+        return user
     }
 
     async deleteUser(id: number) {
-
+        const userId = await this.userRepository.destroy({ where: { id } })
+        return { id: userId }
     }
 
     async findByEmail(email: string) {
