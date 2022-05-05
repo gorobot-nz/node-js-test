@@ -12,6 +12,16 @@ const start = async () => {
             .setTitle('Node.Js test API')
             .setDescription('Docs')
             .setVersion('0.1.0')
+            .addBearerAuth(
+                {
+                    description: 'Default JWT Authorization',
+                    type: 'http',
+                    in: 'header',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+                'defaultBearerAuth',
+            )
             .build()
 
         const document = SwaggerModule.createDocument(app, config)

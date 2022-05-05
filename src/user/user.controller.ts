@@ -3,7 +3,7 @@ import { PutUserDto } from "./dto/putuser.dto";
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { CreatePdfDto } from "./dto/createPdf.dto";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { User } from "./user.model";
 
 @ApiTags('Users')
@@ -22,6 +22,7 @@ export class UserController {
     @ApiResponse({ status: 200, type: User })
     @Get('/:id')
     @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('defaultBearerAuth')
     getUser(@Param('id') id: number) {
         return this.userService.getUser(id)
     }
@@ -30,6 +31,7 @@ export class UserController {
     @ApiResponse({ status: 200, type: User })
     @Put('/:id')
     @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('defaultBearerAuth')
     putUser(@Body() dto: PutUserDto, @Param('id') id: number) {
         return this.userService.putUser(dto, id)
     }
@@ -38,6 +40,7 @@ export class UserController {
     @ApiResponse({ status: 200, type: Object })
     @Delete('/:id')
     @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('defaultBearerAuth')
     deleteUser(@Param('id') id: number) {
         return this.userService.deleteUser(id)
     }
