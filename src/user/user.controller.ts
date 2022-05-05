@@ -7,7 +7,7 @@ import { UserService } from "./user.service";
 export class UserController {
     constructor(private userService: UserService) { }
 
-    @Post()
+    @Post('/signup')
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'image', maxCount: 1 }
     ]))
