@@ -1,11 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignUpDto } from 'src/user/dto/signup.dto';
 import { SignInDto } from 'src/user/dto/signin.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcryptjs'
-import { User } from 'src/user/user.model'
-import { debugPort } from 'process';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +12,7 @@ export class AuthService {
         private jwtService: JwtService) { }
 
     async signUp(dto: SignUpDto, image) {
-        const candidate = await this.userService.findByUsername(dto.email);
+        const candidate = await this.userService.findByEmail(dto.email);
         if (candidate) {
             throw new HttpException('Exists', HttpStatus.BAD_REQUEST)
         }
@@ -25,15 +23,27 @@ export class AuthService {
         return this.generateToken(user)
     }
 
-    async signIn() {
-
+    async signIn(dto: SignInDto) {
+        const user = await this.validateUser(dto)
+        return this.generateToken(user)
     }
 
-    generateToken(user) {
-        console.log(user)
+    private async generateToken(user) {
         const payload = { id: user.id, email: user.email, image: user.image }
         return {
             token: this.jwtService.sign(payload)
         }
+    }
+
+    private async validateUser(dto: SignInDto) {
+        const user = await this.userService.findByEmail(dto.email)
+        if (!user) {
+            throw new UnauthorizedException({ message: "Wrong email" })
+        }
+        const arePasswordsEqual = await bcrypt.compare(dto.password, user?.password)
+        if (arePasswordsEqual) {
+            return user
+        }
+        throw new UnauthorizedException({ message: "Wrong password" })
     }
 }
