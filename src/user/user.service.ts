@@ -39,6 +39,9 @@ export class UserService {
 
     async createPdf(email: string) {
         const user = await this.findByEmail(email)
+        if (!user) {
+            throw new HttpException('No such user', HttpStatus.BAD_REQUEST)
+        }
         const buf = await this.fileService.createPdfFile(user.firstName, user.lastName, user.image)
         user.set({
             pdf: buf
