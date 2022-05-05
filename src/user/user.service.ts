@@ -3,6 +3,7 @@ import { User } from "./user.model";
 import { InjectModel } from "@nestjs/sequelize";
 import { SignUpDto } from "./dto/signup.dto";
 import { FileService } from "src/file/file.service";
+import { PutUserDto } from "./dto/putUser.dto";
 
 @Injectable()
 export class UserService {
@@ -16,15 +17,16 @@ export class UserService {
         return user
     }
 
-    async getUser() {
+    async getUser(id: number) {
+        const user = await this.userRepository.findOne({ where: { id } })
+        return user
+    }
+
+    async putUser(dto: PutUserDto, id: number) {
 
     }
 
-    async putUser() {
-
-    }
-
-    async deleteUser() {
+    async deleteUser(id: number) {
 
     }
 

@@ -1,21 +1,27 @@
-import { Body, Controller, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
-import { FileFieldsInterceptor } from "@nestjs/platform-express";
-import { SignUpDto } from "./dto/signup.dto";
+import { Body, Controller, Delete, Get, Post, Put, Param, UseGuards } from "@nestjs/common";
+import { PutUserDto } from "./dto/putUser.dto";
 import { UserService } from "./user.service";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 @Controller('/user')
 export class UserController {
     constructor(private userService: UserService) { }
 
-    getUser() {
-
+    @Get('/:id')
+    @UseGuards(JwtAuthGuard)
+    getUser(@Param('id') id: number) {
+        return this.userService.getUser(id)
     }
 
-    putUser() {
-
+    @Put('/:id')
+    @UseGuards(JwtAuthGuard)
+    putUser(@Body() dto: PutUserDto, @Param('id') id: number) {
+        return this.userService.putUser(dto, id)
     }
 
-    deleteUser() {
-
+    @Delete('/:id')
+    @UseGuards(JwtAuthGuard)
+    deleteUser(@Param('id') id: number) {
+        return this.userService.deleteUser(id)
     }
 }
