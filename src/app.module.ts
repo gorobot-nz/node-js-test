@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config'
 import { User } from "./user/user.model";
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { AuthModule } from './auth/auth.module';
 import * as path from "path";
 
 @Module({
@@ -25,6 +26,7 @@ import * as path from "path";
         }),
         UserModule,
         FileModule,
+        AuthModule,
     ]
 })
 export class AppModule {

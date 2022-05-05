@@ -8,7 +8,8 @@ import { FileService } from "src/file/file.service";
 @Module({
     controllers: [UserController],
     providers: [UserService, FileService],
-    imports: [SequelizeModule.forFeature([User])]
+    imports: [SequelizeModule.forFeature([User])],
+    exports: [UserService]
 })
 export class UserModule {
 

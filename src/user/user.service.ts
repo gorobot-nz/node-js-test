@@ -10,14 +10,10 @@ export class UserService {
     constructor(@InjectModel(User) private userRepository: typeof User,
         private fileService: FileService) { }
 
-    async signUp(dto: SignUpDto, image) {
+    async createUser(dto: SignUpDto, image) {
         const imageName = this.fileService.createFile(image)
         const user = await this.userRepository.create({ ...dto, image: imageName })
         return user
-    }
-
-    async signIn() {
-
     }
 
     async getUser() {
@@ -30,5 +26,10 @@ export class UserService {
 
     async deleteUser() {
 
+    }
+
+    async findByUsername(email: string) {
+        const user = await this.userRepository.findOne({ where: { email } })
+        return user
     }
 }

@@ -14,7 +14,7 @@ export class User extends Model<User, UserCreationAttributes>{
     id: number;
 
     @Column({ type: DataType.STRING, unique: true, allowNull: false })
-    username: string;
+    email: string;
 
     @Column({ type: DataType.STRING, allowNull: false })
     password: string;
