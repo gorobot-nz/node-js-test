@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Put, Param, UseGuards } from "@nestjs/common";
-import { PutUserDto } from "./dto/putUser.dto";
+import { PutUserDto } from "./dto/putuser.dto";
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { CreatePdfDto } from "./dto/createPdf.dto";

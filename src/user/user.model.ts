@@ -29,5 +29,5 @@ export class User extends Model<User, UserCreationAttributes>{
     image: string;
 
     @Column({ type: DataType.BLOB, allowNull: true })
-    pdf: BinaryData;
+    pdf: Buffer;
 }

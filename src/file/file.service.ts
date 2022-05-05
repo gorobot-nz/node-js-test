@@ -33,9 +33,8 @@ export class FileService {
                 bufferPages: true,
             })
 
-            // customize your PDF document
             doc.text(`${firstName} ${lastName}`, 100, 50)
-            doc.image(path.resolve(__dirname, '..', 'static', 'img', image), 250, 250)
+            doc.image(path.resolve(__dirname, '..', 'static', 'img', image), 100, 100)
             doc.end()
 
             const buffer = []

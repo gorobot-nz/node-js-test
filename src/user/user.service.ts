@@ -3,7 +3,7 @@ import { User } from "./user.model";
 import { InjectModel } from "@nestjs/sequelize";
 import { SignUpDto } from "./dto/signup.dto";
 import { FileService } from "src/file/file.service";
-import { PutUserDto } from "./dto/putUser.dto";
+import { PutUserDto } from "./dto/putuser.dto";
 
 @Injectable()
 export class UserService {
@@ -26,7 +26,7 @@ export class UserService {
     }
 
     async putUser(dto: PutUserDto, id: number) {
-        const user = await this.userRepository.update({ ...dto }, { where: { id }, returning: true })
+        const user = await this.userRepository.update({ ...dto }, { where: { id } })
         return user
     }
 
@@ -38,6 +38,10 @@ export class UserService {
     async createPdf(email: string) {
         const user = await this.findByEmail(email)
         const buf = await this.fileService.createPdfFile(user.firstName, user.lastName, user.image)
+        user.set({
+            pdf: buf
+        })
+        await user.save()
         return buf
     }
 
