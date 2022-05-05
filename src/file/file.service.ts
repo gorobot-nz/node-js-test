@@ -49,6 +49,7 @@ export class FileService {
     }
 
     deleteFile(fileName) {
-
+        const filePath = path.resolve(__dirname, '..', 'static', 'img', fileName)
+        fs.unlinkSync(filePath)
     }
 }

@@ -34,8 +34,11 @@ export class UserService {
     }
 
     async deleteUser(id: number) {
-        const userId = await this.userRepository.destroy({ where: { id } })
-        return { id: userId }
+        const user = await this.userRepository.findByPk(id)
+        user.destroy()
+        this.fileService.deleteFile(user.image)
+        await user.save()
+        return { id: user.id }
     }
 
     async createPdf(email: string) {
