@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as path from 'path'
 import * as fs from 'fs'
 import * as uuid from 'uuid'
-import * as pdf from 'pdfkit'
+import * as PDFDocument from 'pdfkit'
 
 @Injectable()
 export class FileService {
@@ -21,20 +21,32 @@ export class FileService {
         }
     }
 
-    createPdfFile(firstName, lastName, image) {
+    async createPdfFile(firstName, lastName, image): Promise<Buffer> {
         const filePath = path.resolve(__dirname, '..', 'static', 'pdf')
         if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath, { recursive: true })
         }
-        const fileName = uuid.v4() + ".pdf"
 
-        let pdfDoc = new pdf
-        pdfDoc.pipe(fs.createWriteStream(path.resolve(filePath, fileName)))
-        pdfDoc.text(`Name: ${firstName} Surname:${lastName}`)
+        const pdfBuffer: Buffer = await new Promise(resolve => {
+            const doc = new PDFDocument({
+                size: 'LETTER',
+                bufferPages: true,
+            })
 
-        const imagePath = path.resolve(__dirname, '..', 'static', 'img', image)
-        pdf.image(imagePath, { fit: [250, 250] })
-        pdf.end()
+            // customize your PDF document
+            doc.text(`${firstName} ${lastName}`, 100, 50)
+            doc.image(path.resolve(__dirname, '..', 'static', 'img', image), 250, 250)
+            doc.end()
+
+            const buffer = []
+            doc.on('data', buffer.push.bind(buffer))
+            doc.on('end', () => {
+                const data = Buffer.concat(buffer)
+                resolve(data)
+            })
+        })
+
+        return pdfBuffer
     }
 
     deleteFile(fileName) {

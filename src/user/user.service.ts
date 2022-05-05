@@ -26,7 +26,6 @@ export class UserService {
     }
 
     async putUser(dto: PutUserDto, id: number) {
-        console.log(id)
         const user = await this.userRepository.update({ ...dto }, { where: { id }, returning: true })
         return user
     }
@@ -38,8 +37,8 @@ export class UserService {
 
     async createPdf(email: string) {
         const user = await this.findByEmail(email)
-        this.fileService.createPdfFile(user.firstName, user.lastName, user.image)
-        return 'Bruh'
+        const buf = await this.fileService.createPdfFile(user.firstName, user.lastName, user.image)
+        return buf
     }
 
     async findByEmail(email: string) {

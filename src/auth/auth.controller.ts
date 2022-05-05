@@ -10,9 +10,12 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('/signup')
-    @UseInterceptors(FileInterceptor('image'))
-    signUp(@Body() dto: SignUpDto, @UploadedFiles() image) {
-        return this.authService.signUp(dto, image)
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'image', maxCount: 1 },
+    ]))
+    signUp(@Body() dto: SignUpDto, @UploadedFiles() files) {
+        const { image } = files
+        return this.authService.signUp(dto, image[0])
     }
 
     @Post('/signin')
